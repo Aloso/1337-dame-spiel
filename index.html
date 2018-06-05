@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <title>Dame</title>
+    <!--suppress CssFloatPxLength -->
+    <style>
+        * {
+            font-family: "Noto Sans", sans-serif;
+        }
+        space {
+            display: inline-block;
+            width: 30px;
+        }
+        table {
+            border-collapse: collapse;
+        }
+        table td {
+            border: 1px solid gray;
+            padding: 2px 5px;
+        }
+
+        table.board {
+            box-shadow: 0 0 5px rgba(0,0,0,0.4);
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+
+        table.board td {
+            display: table-cell;
+            border: none;
+            padding: 0;
+            width: 40px;
+            height: 40px;
+            color: black;
+            background-color: #dddddd;
+            box-shadow: 0 0 0 red;
+            position: relative;
+            overflow: hidden;
+            transition: 0.2s;
+        }
+        table.board tr:nth-child(2n + 1) td:nth-child(2n),
+        table.board tr:nth-child(2n) td:nth-child(2n + 1) {
+            background-color: #444;
+            color: white;
+        }
+
+        table.board td .posHint {
+            display: block;
+            font-size: 60%;
+            float: left;
+            margin: 0 0 0 2px;
+            position: absolute;
+            opacity: 0;
+            line-height: 1.15em;
+        }
+        table.board tr:nth-child(2n + 1) td:nth-child(2n) .posHint,
+        table.board tr:nth-child(2n) td:nth-child(2n + 1) .posHint {
+            opacity: 0.7;
+        }
+
+        table.board span:nth-child(2) {
+            display: block;
+            text-align: center;
+            width: 40px;
+            height: 40px;
+        }
+
+        table.board span.man1, table.board span.man2,
+        table.board span.king1, table.board span.king2 {
+            display: block;
+            text-align: center;
+            float: left;
+        }
+
+        table.board span.man1:before {
+            content: " ";
+            display: block;
+            width: 20px;
+            height: 20px;
+            margin: 10px auto 0 auto;
+            background-color: white;
+            border-radius: 25px;
+        }
+        table.board span.man2:before {
+            content: " ";
+            display: block;
+            width: 18px;
+            height: 18px;
+            border: 1px solid white;
+            margin: 10px auto 0 auto;
+            background-color: black;
+            border-radius: 25px;
+        }
+        table.board span.king1:before {
+            content: " ";
+            display: block;
+            width: 24px;
+            height: 24px;
+            margin: 8px auto 0 auto;
+            background-color: white;
+            border-radius: 25px;
+            box-shadow: 1.4px 1.4px #444, 1.4px -1.4px #444, -1.4px 1.4px #444, -1.4px -1.4px #444,
+                0 2px #444, 2px 0 #444, 0 -2px #444, -2px 0 #444, 3.2px 3.2px white;
+        }
+        table.board span.king2:before {
+            content: " ";
+            display: block;
+            width: 22px;
+            height: 22px;
+            margin: 8px auto 0 auto;
+            border: 1px solid white;
+            background-color: black;
+            border-radius: 25px;
+            box-shadow: 1.4px 1.4px #444, 1.4px -1.4px #444, -1.4px 1.4px #444, -1.4px -1.4px #444,
+                0 2px #444, 2px 0 #444, 0 -2px #444, -2px 0 #444, 3.2px 3.2px white;
+        }
+
+        table.board td:hover {
+            box-shadow: 0 0 2px 1.3px red;
+            z-index: 2;
+        }
+
+        table.board td:focus {
+            outline: none;
+        }
+
+        table.board td.selected {
+            background-color: #c00 !important;
+        }
+
+        table.board td.selected span.king1:before,
+        table.board td.selected span.king2:before {
+            box-shadow: 1.4px 1.4px #c00, 1.4px -1.4px #c00, -1.4px 1.4px #c00, -1.4px -1.4px #c00,
+                0 2px #c00, 2px 0 #c00, 0 -2px #c00, -2px 0 #c00, 3.2px 3.2px white;
+        }
+
+        #infoPlayer, #info {
+            margin: 0.5em 0;
+            min-height: 32px;
+        }
+        #cancel, #undo {
+            display: inline-block;
+        }
+    </style>
+</head>
+<body>
+
+<div id="infoPlayer"></div>
+<div id="info"></div>
+<div id="undo"></div>
+<div id="cancel"></div>
+<div id="board"></div>
+
+<script src="polyfills.js"></script>
+<script src="rules.js"></script>
+<script src="model.js"></script>
+<script src="view.js"></script>
+<script>
+    /** @type Model */
+    let model;
+    setTimeout(function () {
+        model = getModel();
+        let view1 = getHTMLView(model);
+        let rules = getInternationalRules(model, 10);
+        model.setRules(rules);
+        model.start();
+    }, 200);
+</script>
+</body>
+</html>
