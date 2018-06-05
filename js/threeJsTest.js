@@ -4,7 +4,7 @@ function Init() {
     const HEIGHT = window.innerHeight;
 
     // Set some camera attributes.
-    const VIEW_ANGLE = 45;
+    const VIEW_ANGLE = 75;
     const ASPECT = WIDTH / HEIGHT;
     const NEAR = 0.1;
     const FAR = 10000;
@@ -38,7 +38,7 @@ function Init() {
 
     // create a point light
     const pointLight =
-        new THREE.PointLight(0xFFFFFF);
+        new THREE.PointLight();
 
     // set its position
     pointLight.position.x = 10;
@@ -48,37 +48,35 @@ function Init() {
     // add to the scene
     scene.add(pointLight);
 
-    // create the sphere's material
-    const sphereMaterial =
-        new THREE.MeshLambertMaterial(
-            {
-                color: 0xCC0000
-            });
 
-    // Set up the sphere vars
-    const RADIUS = 50;
-    const SEGMENTS = 16;
-    const RINGS = 16;
+    var textLoader = new THREE.TextureLoader();
+    var texture = textLoader.load( 'textures/bright_wood.jpg' );
 
-    // Create a new mesh with
-    // sphere geometry - we will cover
-    // the sphereMaterial next!
-    const sphere = new THREE.Mesh(
+    // immediately use the texture for material creation
+    var material = new THREE.MeshPhongMaterial( { map: texture } );
 
-        new THREE.SphereGeometry(
-            RADIUS,
-            SEGMENTS,
-            RINGS),
+    var loader = new THREE.STLLoader();
+    loader.load('objects/Stein.stl', function (geometry) {
+        ding = new THREE.Mesh(geometry, material);
+        ding.position.x = 0;
+        ding.position.y = 0;
+        ding.position.z = -10;
+        ding.rotation.y = 0;
+        ding.rotation.z = 0;
+        ding.scale.z = 4;
+        ding.scale.x = 4;
+        ding.scale.y = 4;
+        scene.add(ding);
+    });
 
-        sphereMaterial);
+    setInterval(function(){
+        
+        ding.rotation.x = 0.01 + ding.rotation.x;
+        update();
+    },100)
 
-    // Move the Sphere back in Z so we
-    // can see it.
-    sphere.position.z = -300;
 
-    // Finally, add the sphere to the scene.
-    scene.add(sphere);
-
+    scene.background = new THREE.Color(0xffffff);
     function update() {
         // Draw!
         renderer.render(scene, camera);
